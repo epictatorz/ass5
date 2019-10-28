@@ -10,8 +10,8 @@ public:
 	int Length();
 	bool IsFull();
 	bool IsEmpty();
-	void Enqueue(int);
-	int Dequeue();
+	void Enqueue(data);
+	data Dequeue();
 	void Clear();
 private:
 	data d[ROQ_SIZE];

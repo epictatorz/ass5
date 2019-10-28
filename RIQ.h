@@ -8,7 +8,7 @@ const int RIQ_SIZE = 8;
 
 class Node {
 public:
-	int data;
+	struct data data;
 	Node *next;
 };
 
@@ -18,9 +18,8 @@ public:
 	int Length();
 	bool IsEmpty();
 	bool IsFull();
-	void Enqueue(int);
-	int Dequeue();
-	void Clear();
+	void Enqueue(struct data);
+	struct data Dequeue();
 private:
 	Node *front;
 	Node *back;

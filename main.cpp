@@ -6,12 +6,13 @@
 #include "SIQ.h"
 #include "RIQ.h"
 #include "ROQ.h"
+#include "structs.h"
 using namespace std;
 
 int globalClock;
 void AsynchronousSim(string, string);
 int GenerateTimeToNextEvent();
-char PrepareNextDataMessage(char);
+struct data PrepareNextDataMessage(char);
 
 int main() {
 	AsynchronousSim("inputFile.txt", "outputFile.txt");
@@ -22,7 +23,8 @@ int main() {
 void AsynchronousSim(string Input, string Output) {
 	int STtS, STtR, RTtS, RTtR;
 	string SSS, SRS, RSS, RRS;
-	char RDataMsg, RAckMsg, SDataMsg, SAckMsg;
+	struct data RDataMsg, SDataMsg;
+	struct data SAckMsg, RAckMsg;
 	globalClock = 0;
 	SOQ SOQueue;
 	SIQ SIQueue;
@@ -71,7 +73,7 @@ void AsynchronousSim(string Input, string Output) {
 		if (RRS == "RECEIVE") {
 			if (!RIQueue.IsEmpty()) {
 				RDataMsg = RIQueue.Dequeue();
-				out << RDataMsg;
+				out << RDataMsg.data;
 			}
 			else {
 				RRS = "NO_RECEIVE";
@@ -86,7 +88,7 @@ void AsynchronousSim(string Input, string Output) {
 		if (SSS == "SEND") {
 			if (!SOQueue.IsFull()) {
 				if (in) {
-					SDataMsg = in.get();
+					SDataMsg.data = in.get();
 					if (in) {
 						SDataMsg = PrepareNextDataMessage(SDataMsg);
 						SOQueue.Enqueue(SDataMsg);
@@ -120,6 +122,9 @@ int GenerateTimeToNextEvent() {
 	return globalClock + (1 + rand() % 100);
 }
 
-char PrepareNextDataMessage(char msg) {
-	return msg;
+struct data PrepareNextDataMessage(struct data msg) {
+	struct data temp;
+	temp = msg;
+	temp.num++;
+	return temp;
 }

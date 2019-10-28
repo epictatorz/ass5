@@ -25,22 +25,21 @@ bool ROQ::IsFull() {
 	return false;
 }
 
-void ROQ::Enqueue(int x) {
+void ROQ::Enqueue(data x) {
 	if (IsFull() != true) {
 		back = (back + 1) % ROQ_SIZE;
-		d[back].data = x;
-		d[back].num = back;
+		d[back] = x;
 		length++;
 	}
 	return;
 }
 
-int ROQ::Dequeue() {
+data ROQ::Dequeue() {
 	front = (front + 1) % ROQ_SIZE;
 	int x = d[front].data;
 	d[front].num = front;
 	length--;
-	return x;
+	return d[front];
 }
 
 void ROQ::Clear() {

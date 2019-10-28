@@ -1,4 +1,5 @@
 #include "RIQ.h"
+#include "structs.h"
 
 RIQ::RIQ() {
 	front = NULL;
@@ -29,7 +30,7 @@ bool RIQ::IsFull() {
 	return false;
 }
 
-void RIQ::Enqueue(int x) {
+void RIQ::Enqueue(struct data x) {
 	Node* q = new Node;
 	q->data = x;
 	q->next = NULL;
@@ -44,16 +45,19 @@ void RIQ::Enqueue(int x) {
 	return;
 }
 
-int RIQ::Dequeue() {
+struct data RIQ::Dequeue() {
 	if (IsEmpty() != true) {
 		Node* q = front;
-		int x = front->data;
+		struct data temp = front->data;
 		if (front == NULL) {
 			back == front;
 		}
 		delete q;
 		length--;
-		return x;
+		return temp;
 	}
-	return -1;
+	else {
+		struct data temp;
+		return temp;
+	}
 }

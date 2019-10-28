@@ -8,15 +8,9 @@ const int SIQ_SIZE = 4;
 
 class Node {
 public:
-	Node();
-	int data;
+	struct data data;
 	Node *next;
 };
-
-Node::Node() {
-	data = 0;
-	next = NULL;
-}
 
 class SIQ {
 public:
@@ -24,9 +18,8 @@ public:
 	int Length();
 	bool IsEmpty();
 	bool IsFull();
-	void Enqueue(int);
-	int Dequeue();
-	void Clear();
+	void Enqueue(struct data);
+	struct data Dequeue();
 private:
 	Node *front;
 	Node *back;

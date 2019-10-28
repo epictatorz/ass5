@@ -1,4 +1,5 @@
 #include "SIQ.h"
+#include "structs.h"
 
 SIQ::SIQ() {
 	front = NULL;
@@ -26,7 +27,7 @@ bool SIQ::IsFull() {
 	return false;
 }
 
-void SIQ::Enqueue(int x) {
+void SIQ::Enqueue(struct data x) {
 	Node* q = new Node;
 	q->data = x;
 	q->next = NULL;
@@ -41,16 +42,19 @@ void SIQ::Enqueue(int x) {
 	return;
 }
 
-int SIQ::Dequeue() {
+struct data SIQ::Dequeue() {
 	if (IsEmpty() != true) {
 		Node* q = front;
-		int x = front->data;
+		struct data temp = front->data;
 		if (front == NULL) {
 			back == front;
 		}
 		delete q;
 		length--;
-		return x;
+		return temp;
 	}
-	return -1;
+	else {
+		struct data temp;
+		return temp;
+	}
 }

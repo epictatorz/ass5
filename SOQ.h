@@ -10,11 +10,11 @@ public:
 	int Length();
 	bool IsFull();
 	bool IsEmpty();
-	void Enqueue(int);
-	int Dequeue();
+	void Enqueue(struct data);
+	struct data Dequeue();
 	void Clear();
 private:
-	data d[SOQ_SIZE];
+	struct data d[SOQ_SIZE];
 	int front;
 	int back;
 	int length;
