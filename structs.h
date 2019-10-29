@@ -2,6 +2,7 @@
 #define structs_h
 
 struct info{
+	info();
 	int num;
 	char data;
 };

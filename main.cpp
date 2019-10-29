@@ -15,7 +15,8 @@ int GenerateTimeToNextEvent();
 info PrepareNextDataMessage(info);
 
 int main() {
-	AsynchronousSim("wordCount.gauss", "outputFile.gauss");
+	srand(time(0));
+	AsynchronousSim("wordCount.gauss", "outputFile.txt");
 
 	return 0;
 }
@@ -30,12 +31,10 @@ void AsynchronousSim(string Input, string Output) {
 	SIQ SIQueue;
 	ROQ ROQueue;
 	RIQ RIQueue;
-
 	STtS = GenerateTimeToNextEvent();
 	STtR = GenerateTimeToNextEvent();
 	RTtS = GenerateTimeToNextEvent();
 	RTtR = GenerateTimeToNextEvent();
-
 	SSS = "NO_SEND";
 	SRS = "NO_RECEIVE";
 	RSS = "NO_SEND";
@@ -47,12 +46,12 @@ void AsynchronousSim(string Input, string Output) {
 	out.open(Output);
 	
 	while (1) {
-		if (in.eof() && SOQueue.IsEmpty() && SIQueue.IsEmpty() && ROQueue.IsFull() && RIQueue.IsFull()) {
+		if (in.eof() && SOQueue.IsEmpty() && SIQueue.IsEmpty() && ROQueue.IsEmpty() && RIQueue.IsEmpty()) {
 			break;
 		}
 		globalClock++;
-		cout << " Global Clock : " << globalClock << endl;
-		cout << STtS << ' ' << STtR << ' ' << RTtS << ' ' << RTtR << endl;
+		cout << "Global Clock : " << globalClock << endl;
+		//cout << STtS << ' ' << STtR << ' ' << RTtS << ' ' << RTtR << endl;
 
 		if (globalClock == STtS) {
 			SSS = "SEND";
@@ -73,8 +72,8 @@ void AsynchronousSim(string Input, string Output) {
 
 		if (RRS == "RECEIVE") {
 			if (!RIQueue.IsEmpty()) {
-				cout << "RRS" << endl;
 				RDataMsg = RIQueue.Dequeue();
+				cout << "Receiver: Received [" << RDataMsg.num << ',' << RDataMsg.data << ']' << endl;
 				out << RDataMsg.data;
 			}
 			else {
@@ -83,41 +82,39 @@ void AsynchronousSim(string Input, string Output) {
 		}
 		if (SRS == "RECEIVE") {
 			if (!SIQueue.IsFull()) {
-				cout << "SRS" << endl;
 				SAckMsg = SIQueue.Dequeue();
 			}
 			SRS = "NO_RECEIVE";
 		}
 		if (SSS == "SEND") {
-			if (!SOQueue.IsFull()) {
-				cout << "SSS" << endl;
+			while (!SOQueue.IsFull()) {
 				if (in) {
 					SDataMsg.data = in.get();
 					if (in) {
-						cout << "SSS2" << endl;
 						SDataMsg = PrepareNextDataMessage(SDataMsg);
 						SOQueue.Enqueue(SDataMsg);
 					}
 				}
 			}
-			while (!SOQueue.IsEmpty() && !RIQueue.IsFull()) {
+			if (!SOQueue.IsEmpty() && !RIQueue.IsFull()) {
 				SDataMsg = SOQueue.Dequeue();
 				RIQueue.Enqueue(SDataMsg);
+					cout << "Sender: Sent [" << SDataMsg.num << ',' << SDataMsg.data << ']' << endl;
 			}
 			SSS = "NO_SEND";
 		}
 		if (RSS == "SEND") {
 			while (!ROQueue.IsEmpty() && !SIQueue.IsFull()) {
-				cout << "RSS" << endl;
 				RAckMsg = ROQueue.Dequeue();
 				SIQueue.Enqueue(RAckMsg);
+				cout << "Sender: Received [" << RAckMsg.num << ',' << RAckMsg.data << ']' << endl;
 			}
 			RSS = "NO_SEND";
 		}
 		if (RRS == "RECEIVE") {
-			cout << "RRS" << endl;
 			RAckMsg = PrepareNextDataMessage(RDataMsg);
 			ROQueue.Enqueue(RAckMsg);
+			cout << "Receiver: Sent [" << RAckMsg.num << ',' << RAckMsg.data << ']' << endl;
 			RRS = "NO_RECEIVE";
 		}
 	}
@@ -125,13 +122,13 @@ void AsynchronousSim(string Input, string Output) {
 }
 
 int GenerateTimeToNextEvent() {
-	srand(time(0));
-	return globalClock + (1 + rand() % 100);
+//	return (1 + rand() % 100);
+	return 1;
 }
 
 info PrepareNextDataMessage(info msg) {
 	info temp;
-	temp = msg;
-	temp.num++;
+	temp.data = msg.data;
+	temp.num = msg.num + 1;
 	return temp;
 }

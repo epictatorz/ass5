@@ -50,7 +50,7 @@ info SIQ::Dequeue() {
 		Node* q = front;
 		info temp = front->data;
 		if (front == NULL) {
-			back == front;
+			back = front;
 		}
 		delete q;
 		length--;
