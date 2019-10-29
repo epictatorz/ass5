@@ -1,4 +1,5 @@
 #include <iostream>
+#include "structs.h"
 using namespace std;
 
 #ifndef SIQ_h
@@ -6,11 +7,11 @@ using namespace std;
 
 const int SIQ_SIZE = 4;
 
-class Node {
-public:
-	struct data data;
-	Node *next;
-};
+//class Node {
+//public:
+//	info data;
+//	Node *next;
+//};
 
 class SIQ {
 public:
@@ -18,8 +19,8 @@ public:
 	int Length();
 	bool IsEmpty();
 	bool IsFull();
-	void Enqueue(struct data);
-	struct data Dequeue();
+	void Enqueue(info);
+	info Dequeue();
 private:
 	Node *front;
 	Node *back;

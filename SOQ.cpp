@@ -25,7 +25,7 @@ bool SOQ::IsFull() {
 	return false;
 }
 
-void SOQ::Enqueue(data x) {
+void SOQ::Enqueue(info x) {
 	if (IsFull() != true) {
 		back = (back + 1) % SOQ_SIZE;
 		d[back] = x;
@@ -34,9 +34,9 @@ void SOQ::Enqueue(data x) {
 	return;
 }
 
-data SOQ::Dequeue() {
+info SOQ::Dequeue() {
 	front = (front + 1) % SOQ_SIZE;
-	data x = d[front];
+	info x = d[front];
 	return x;
 }
 

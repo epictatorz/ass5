@@ -19,7 +19,9 @@ bool RIQ::IsEmpty() {
 }
 
 bool RIQ::IsFull() {
-
+	if (length == RIQ_SIZE) {
+		return true;
+	}
 	try { Node* q = new Node; }
 
 	catch (bad_alloc)
@@ -30,7 +32,7 @@ bool RIQ::IsFull() {
 	return false;
 }
 
-void RIQ::Enqueue(struct data x) {
+void RIQ::Enqueue(info x) {
 	Node* q = new Node;
 	q->data = x;
 	q->next = NULL;
@@ -45,10 +47,10 @@ void RIQ::Enqueue(struct data x) {
 	return;
 }
 
-struct data RIQ::Dequeue() {
+info RIQ::Dequeue() {
 	if (IsEmpty() != true) {
 		Node* q = front;
-		struct data temp = front->data;
+		info temp = front->data;
 		if (front == NULL) {
 			back == front;
 		}
@@ -57,7 +59,7 @@ struct data RIQ::Dequeue() {
 		return temp;
 	}
 	else {
-		struct data temp;
+		info temp;
 		return temp;
 	}
 }

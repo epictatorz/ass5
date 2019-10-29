@@ -19,6 +19,9 @@ bool SIQ::IsEmpty() {
 }
 
 bool SIQ::IsFull() {
+	if (length == SIQ_SIZE) {
+		return true;
+	}
 	try { Node* q = new Node; }
 
 	catch (bad_alloc) {
@@ -27,7 +30,7 @@ bool SIQ::IsFull() {
 	return false;
 }
 
-void SIQ::Enqueue(struct data x) {
+void SIQ::Enqueue(info x) {
 	Node* q = new Node;
 	q->data = x;
 	q->next = NULL;
@@ -42,10 +45,10 @@ void SIQ::Enqueue(struct data x) {
 	return;
 }
 
-struct data SIQ::Dequeue() {
+info SIQ::Dequeue() {
 	if (IsEmpty() != true) {
 		Node* q = front;
-		struct data temp = front->data;
+		info temp = front->data;
 		if (front == NULL) {
 			back == front;
 		}
@@ -54,7 +57,7 @@ struct data SIQ::Dequeue() {
 		return temp;
 	}
 	else {
-		struct data temp;
+		info temp;
 		return temp;
 	}
 }

@@ -12,10 +12,10 @@ using namespace std;
 int globalClock;
 void AsynchronousSim(string, string);
 int GenerateTimeToNextEvent();
-struct data PrepareNextDataMessage(char);
+info PrepareNextDataMessage(info);
 
 int main() {
-	AsynchronousSim("inputFile.txt", "outputFile.txt");
+	AsynchronousSim("wordCount.gauss", "outputFile.gauss");
 
 	return 0;
 }
@@ -23,8 +23,8 @@ int main() {
 void AsynchronousSim(string Input, string Output) {
 	int STtS, STtR, RTtS, RTtR;
 	string SSS, SRS, RSS, RRS;
-	struct data RDataMsg, SDataMsg;
-	struct data SAckMsg, RAckMsg;
+	info RDataMsg, SDataMsg;
+	info SAckMsg, RAckMsg;
 	globalClock = 0;
 	SOQ SOQueue;
 	SIQ SIQueue;
@@ -46,12 +46,13 @@ void AsynchronousSim(string Input, string Output) {
 	in.open(Input);
 	out.open(Output);
 	
-	while (!in.eof()) {
+	while (1) {
 		if (in.eof() && SOQueue.IsEmpty() && SIQueue.IsEmpty() && ROQueue.IsFull() && RIQueue.IsFull()) {
 			break;
 		}
 		globalClock++;
-		cout << " Global Clocl : " << globalClock << endl;
+		cout << " Global Clock : " << globalClock << endl;
+		cout << STtS << ' ' << STtR << ' ' << RTtS << ' ' << RTtR << endl;
 
 		if (globalClock == STtS) {
 			SSS = "SEND";
@@ -72,6 +73,7 @@ void AsynchronousSim(string Input, string Output) {
 
 		if (RRS == "RECEIVE") {
 			if (!RIQueue.IsEmpty()) {
+				cout << "RRS" << endl;
 				RDataMsg = RIQueue.Dequeue();
 				out << RDataMsg.data;
 			}
@@ -81,15 +83,18 @@ void AsynchronousSim(string Input, string Output) {
 		}
 		if (SRS == "RECEIVE") {
 			if (!SIQueue.IsFull()) {
+				cout << "SRS" << endl;
 				SAckMsg = SIQueue.Dequeue();
 			}
 			SRS = "NO_RECEIVE";
 		}
 		if (SSS == "SEND") {
 			if (!SOQueue.IsFull()) {
+				cout << "SSS" << endl;
 				if (in) {
 					SDataMsg.data = in.get();
 					if (in) {
+						cout << "SSS2" << endl;
 						SDataMsg = PrepareNextDataMessage(SDataMsg);
 						SOQueue.Enqueue(SDataMsg);
 					}
@@ -103,12 +108,14 @@ void AsynchronousSim(string Input, string Output) {
 		}
 		if (RSS == "SEND") {
 			while (!ROQueue.IsEmpty() && !SIQueue.IsFull()) {
+				cout << "RSS" << endl;
 				RAckMsg = ROQueue.Dequeue();
 				SIQueue.Enqueue(RAckMsg);
 			}
 			RSS = "NO_SEND";
 		}
 		if (RRS == "RECEIVE") {
+			cout << "RRS" << endl;
 			RAckMsg = PrepareNextDataMessage(RDataMsg);
 			ROQueue.Enqueue(RAckMsg);
 			RRS = "NO_RECEIVE";
@@ -122,8 +129,8 @@ int GenerateTimeToNextEvent() {
 	return globalClock + (1 + rand() % 100);
 }
 
-struct data PrepareNextDataMessage(struct data msg) {
-	struct data temp;
+info PrepareNextDataMessage(info msg) {
+	info temp;
 	temp = msg;
 	temp.num++;
 	return temp;
